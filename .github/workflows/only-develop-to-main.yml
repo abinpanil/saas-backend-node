@@ -1,0 +1,17 @@
+name: Allow only develop -> main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source branch
+        run: |
+          if [ "${{ github.head_ref }}" != "develop" ]; then
+            echo "Pull requests to main must come from develop branch"
+            exit 1
+          fi

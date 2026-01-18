@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  app-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    container_name: saas-app-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../.env.development
+    volumes:
+      - ../src:/app/src
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - saas-network
+    command: npm run dev
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: saas-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: saas_backend
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - saas-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # ports:
+    #   - "5432:5432" # Optional for local DB access
+
+  redis:
+    image: redis:7-alpine
+    container_name: saas-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - saas-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # ports:
+    #   - "6379:6379" # Optional
+
+networks:
+  saas-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
