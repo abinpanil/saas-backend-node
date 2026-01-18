@@ -49,11 +49,9 @@ healthRouter.get('/', async (_req, res) => {
     const isHealthy = dbStatus === 'connected';
     const statusCode = isHealthy ? 200 : 503;
 
-    res.status(statusCode).json({
-      status: isHealthy ? 'ok' : 'degraded',
-      uptime: process.uptime(),
+    return res.status(200).json({
+      status: 'ok',
       timestamp: new Date().toISOString(),
-      database: dbStatus,
     });
   } catch (error) {
     res.status(503).json({
