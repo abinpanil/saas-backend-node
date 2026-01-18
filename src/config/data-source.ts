@@ -9,8 +9,10 @@ export const AppDataSource = new DataSource({
   username: env.DB_USERNAME,
   password: env.DB_PASSWORD,
   database: env.DB_DATABASE,
-  synchronize: false,
+
+  synchronize: false, // NEVER true in production
   logging: env.NODE_ENV === 'development',
-  entities: ['dist/database/entities/**/*.js'],
-  migrations: ['dist/database/migrations/**/*.js'],
+
+  entities: ['src/database/entities/**/*.ts'],
+  migrations: ['src/database/migrations/**/*.ts'],
 });
