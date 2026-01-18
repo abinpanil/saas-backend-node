@@ -28,6 +28,9 @@ jobs:
       - name: Run tests
         run: npm test --if-present
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Deploy to Railway
         run: railway up
         env:

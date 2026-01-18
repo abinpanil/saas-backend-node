@@ -19,6 +19,9 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
       - name: Run migrations
         run: railway run npm run migration:run
         env:
