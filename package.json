@@ -1,0 +1,57 @@
+{
+  "name": "saas-backend-node",
+  "version": "1.0.0",
+  "description": "A production-ready, multi-tenant SaaS backend built using Node.js, TypeScript, Docker, PostgreSQL, and Redis.",
+  "homepage": "https://github.com/abinpanil/saas-backend-node#readme",
+  "bugs": {
+    "url": "https://github.com/abinpanil/saas-backend-node/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abinpanil/saas-backend-node.git"
+  },
+  "license": "ISC",
+  "author": "abinpanil",
+  "type": "commonjs",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate src/database/migrations/Init -d src/config/data-source.ts",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/data-source.ts",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/data-source.ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.17.1",
+    "redis": "^5.10.0",
+    "reflect-metadata": "^0.2.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "typeorm": "^0.3.28"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.0.9",
+    "@types/supertest": "^6.0.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.11",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
