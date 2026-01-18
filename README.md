@@ -1,166 +1,93 @@
-# SaaS Backend – Production Ready
+# 🚀 SaaS Backend – Production Ready
 
-A production-ready, multi-tenant SaaS backend built using **Node.js, TypeScript, Docker, PostgreSQL, and Redis**.
+A **production-ready, multi-tenant SaaS backend** built with **Node.js, TypeScript, Docker, PostgreSQL, Redis, and TypeORM**.
 
-This repository is intended as a **real-world reference implementation** demonstrating backend architecture, system design, and cloud-ready development practices suitable for SaaS products.
-
----
-
-> **Note for readers:**  
-> For most use cases, the sections **Overview**, **Architecture**, and **Local Development Setup** are sufficient to get started.  
-> Deployment and advanced sections are provided for completeness and real-world scenarios.
+This repository serves as a **real-world reference implementation** for building scalable SaaS backends with clean architecture, tenant isolation, and cloud-ready deployment.
 
 ---
 
-## Overview
+## ✨ Highlights
 
-This backend is designed with a **modular, feature-based architecture** that supports:
-- Multi-tenancy
-- Authentication & authorization
-- Clean separation of concerns
-- Cloud-ready deployment
-
-It is ideal as a foundation for **SaaS products, MVPs, and startup backends**.
-
----
-
-## Key Features
-
-- Node.js + TypeScript REST API
 - Modular, feature-based architecture
-- Multi-tenant support with tenant isolation
-- JWT-based authentication
-- Role-based access control (RBAC)
-- PostgreSQL for persistent data
-- Redis for caching and performance
-- Dockerized for local and production use
-- CI-ready structure (GitHub Actions compatible)
+- Secure multi-tenant data isolation
+- JWT authentication with role-based access control (RBAC)
+- Docker-first development & production setup
+- Managed PostgreSQL and Redis support
+- CI/CD-ready with GitHub Actions
+- Designed for real SaaS products (not toy examples)
 
 ---
 
-## Tech Stack
+## 🧱 Architecture Overview
+
+- **Architecture style:** Modular monolith (microservice-ready)
+- **Separation of concerns:** Controllers → Services → Data layer
+- **Tenant isolation:** Enforced at middleware and database query level
+- **Stateless API:** Horizontal scaling ready
+- **Infrastructure:** Container-based, cloud-agnostic
+
+This architecture allows the system to scale and evolve into microservices if required.
+
+---
+
+## 🏢 Multi-Tenancy Strategy
+
+- Each request is associated with a `tenantId` (derived from JWT)
+- Tenant context is resolved via middleware
+- All database queries are scoped to the tenant
+- Cross-tenant access is structurally prevented
+
+This ensures **data safety and scalability** in SaaS environments.
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |------|-----------|
 | Language | TypeScript |
-| Runtime | Node.js |
+| Runtime | Node.js (18 LTS) |
 | Framework | Express |
+| ORM | TypeORM |
 | Database | PostgreSQL |
 | Cache | Redis |
-| ORM | TypeORM |
 | Authentication | JWT |
 | Containers | Docker |
 | CI/CD | GitHub Actions |
-| Cloud Ready | AWS-compatible |
+| Cloud | Railway / AWS compatible |
 
 ---
 
-## Architecture
-
-- **Modular monolith** (microservice-ready)
-- Feature-based modules (auth, users, tenants, subscriptions)
-- Controllers handle HTTP concerns
-- Services contain business logic
-- Centralized middleware for auth, tenant resolution, and errors
-
-This structure allows **easy migration to microservices** if required.
-
----
-
-## Multi-Tenancy Strategy
-
-- Each request is associated with a `tenantId`
-- Tenant context is resolved via middleware
-- All database queries are scoped to the tenant
-- Prevents cross-tenant data access
-
-This approach ensures **data isolation and scalability** for SaaS environments.
-
----
-
-## Project Structure
+## 📁 Project Structure
 
 ```bash
 saas-backend-node/
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
+├── .github/workflows/ci.yml
 ├── docker/
 │   ├── Dockerfile
-│   └── docker-compose.yml
-│
+│   ├── Dockerfile.dev
+│   ├── docker-compose.yml
+│   └── docker-compose.dev.yml
 ├── src/
 │   ├── app.ts
 │   ├── server.ts
-│   │
-│   ├── docs/
-│   │   ├── swagger-options.ts
-│   │   └── swagger.ts
-│   │
 │   ├── config/
-│   │   ├── env.ts
-│   │   ├── data-source.ts        # TypeORM DataSource
-│   │   ├── redis.ts
-│   │   └── logger.ts
-│   │
 │   ├── database/
 │   │   ├── entities/
-│   │   │   ├── base.entity.ts
-│   │   │   ├── user.entity.ts
-│   │   │   ├── tenant.entity.ts
-│   │   │   └── subscription.entity.ts
-│   │   │
 │   │   └── migrations/
-│   │
 │   ├── modules/
 │   │   ├── auth/
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── auth.routes.ts
-│   │   │   └── auth.types.ts
-│   │   │
 │   │   ├── users/
-│   │   │   ├── user.controller.ts
-│   │   │   ├── user.service.ts
-│   │   │   ├── user.routes.ts
-│   │   │   └── user.types.ts
-│   │   │
 │   │   ├── tenants/
-│   │   │   ├── tenant.controller.ts
-│   │   │   ├── tenant.service.ts
-│   │   │   ├── tenant.routes.ts
-│   │   │   └── tenant.types.ts
-│   │   │
 │   │   └── subscriptions/
-│   │       ├── subscription.controller.ts
-│   │       ├── subscription.service.ts
-│   │       ├── subscription.routes.ts
-│   │       └── subscription.types.ts
-│   │
 │   ├── common/
 │   │   ├── middleware/
-│   │   │   ├── auth.middleware.ts
-│   │   │   ├── tenant.middleware.ts
-│   │   │   └── error.middleware.ts
-│   │   │
 │   │   ├── utils/
-│   │   │   ├── jwt.ts
-│   │   │   ├── password.ts
-│   │   │   ├── pagination.ts
-│   │   │   └── response.ts
-│   │   │
 │   │   └── constants/
-│   │       └── roles.ts
-│   │
+│   ├── docs/        # Swagger configuration
 │   ├── routes.ts
 │   └── health.ts
-│
 ├── tests/
-│   ├── auth.test.ts
-│   ├── user.test.ts
-│   └── tenant.test.ts
-│
 ├── .env.example
 ├── package.json
 ├── tsconfig.json
@@ -171,277 +98,96 @@ saas-backend-node/
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+- **Node.js** ≥ 18
+- **Docker** & **Docker Compose**
+- **Git**
 
-- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
-- **npm** or **yarn** - Package manager
-- **Docker** and **Docker Compose** - [Download](https://www.docker.com/products/docker-desktop)
-- **PostgreSQL** (v14 or higher) - For local development without Docker
-- **Redis** (v6 or higher) - For caching
-- **Git** - Version control
+**Optional** (if not using Docker locally):
+- **PostgreSQL** ≥ 14
+- **Redis** ≥ 6
 
 ---
 
-## Local Development Setup
+## Local Development
 
-### 1. Clone the Repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/abinpanil/saas-backend-node.git
 cd saas-backend-node
 ```
 
-### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-### 3. Environment Configuration
-
-Create a `.env` file in the root directory:
+### Environment Configuration
 
 ```bash
 cp .env.example .env
 ```
 
-Update the `.env` file with your configuration:
+Update values as required.
 
-### 4. Database Setup
-
-#### Option A: Using Docker (Recommended)
+### Run with Docker (Recommended)
 
 ```bash
-# Start PostgreSQL and Redis containers
-docker-compose up -d postgres redis
-
-# Run migrations
-npm run migration:run
-```
-
-#### Option B: Local PostgreSQL
-
-```bash
-# Create database
-createdb saas_backend
-
-# Run migrations
-npm run migration:run
-```
-
-### 5. Start Development Server
-
-```bash
-# Development mode with hot reload
-npm run dev
-
-# Production build
-npm run build
-npm start
-```
-
-The server will start at `http://localhost:3000`
-
----
-
-## API Documentation
-
-This project uses **Swagger/OpenAPI** for interactive API documentation.
-
-### Accessing Documentation
-
-Once the server is running, visit:
-
-```
-http://localhost:3000/api-docs
-```
-
-### Features
-
-- **Interactive API Explorer** - Test endpoints directly from the browser
-- **Request/Response Schemas** - View detailed data models
-- **Authentication Testing** - Test protected endpoints with JWT tokens
-- **Auto-generated** - Documentation updates automatically from code annotations
-
----
-
-
-## Deployment
-
-### Docker Deployment
-
-This project includes separate Docker configurations for development and production environments.
-
-#### Development Environment
-
-For local development with hot reload:
-
-```bash
-# Start all services (app, postgres, redis) in development mode
 cd docker
 docker-compose -f docker-compose.dev.yml up --build
-
-# Or run in detached mode
-docker-compose -f docker-compose.dev.yml up -d
-
-# View logs
-docker-compose -f docker-compose.dev.yml logs -f app-dev
-
-# Stop services
-docker-compose -f docker-compose.dev.yml down
-
-# Stop and remove volumes (clean slate)
-docker-compose -f docker-compose.dev.yml down -v
+```
 
 **Features:**
-- Hot reload with volume mounting
-- Development dependencies included
+- Hot reload enabled
+- PostgreSQL and Redis included
+- Close parity with production
 
-# Navigate to docker directory
-cd docker
-
-# Build and start all services
-docker-compose up --build -d
-
-# View logs
-docker-compose logs -f app
-
-# Stop services
-docker-compose down
-```
-
-**3. Production Features**
-
-- Multi-stage build for optimized image size
-- Non-root user for security
-- Production dependencies only
-- Health checks for all services
-- Persistent volumes for data
-- Automatic restart policies
-
-#### Docker Commands Reference
+### Run Database Migrations
 
 ```bash
-# View running containers
-docker-compose ps
-
-# View logs for specific service
-docker-compose logs -f postgres
-docker-compose logs -f redis
-docker-compose logs -f app
-
-# Execute commands in container
-docker-compose exec app sh
-docker-compose exec postgres psql -U postgres -d saas_backend
-
-# Rebuild specific service
-docker-compose build app
-
-# Remove all containers and volumes
-docker-compose down -v
-
-# View resource usage
-docker stats
+npm run migration:run
 ```
 
-#### Environment Files
+### Access Services
 
-The project uses different environment files for different contexts:
+- **API:** http://localhost:3000
+- **Health check:** http://localhost:3000/health
+- **Swagger docs:** http://localhost:3000/api-docs
 
-- `.env.example` - Template with all available variables
-- `.env.development` - Development configuration (used by docker-compose.dev.yml)
-- `docker/.env.production` - Production configuration (used by docker-compose.yml)
+---
 
+## API Documentation (Swagger)
 
+Swagger UI is available at:
 
-### AWS Deployment
-
-#### Using AWS ECS (Elastic Container Service)
-
-1. **Push Docker Image to ECR**
-
-```bash
-# Authenticate Docker to ECR
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
-
-# Tag and push image
-docker tag saas-backend-node:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/saas-backend-node:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/saas-backend-node:latest
+```
+/api-docs
 ```
 
-2. **Set Up RDS (PostgreSQL) and ElastiCache (Redis)**
+**Includes:**
+- JWT authentication testing
+- Request/response schemas
+- Auto-generated documentation
 
-- Create RDS PostgreSQL instance
-- Create ElastiCache Redis cluster
-- Update security groups to allow ECS access
+---
 
-3. **Create ECS Task Definition**
+## Health Check
 
-- Define container with environment variables
-- Set up CloudWatch logging
-- Configure health checks
-
-4. **Deploy to ECS**
-
-- Create ECS cluster
-- Create service with load balancer
-- Configure auto-scaling
-
-#### Using AWS Elastic Beanstalk
-
-```bash
-# Initialize EB
-eb init -p docker saas-backend-node
-
-# Create environment
-eb create production
-
-# Deploy
-eb deploy
+```
+GET /health
 ```
 
-### Heroku Deployment
+**Used by:**
+- Docker
+- Cloud platforms
+- Load balancers
+- Monitoring systems
 
-```bash
-# Login to Heroku
-heroku login
-
-# Create app
-heroku create your-app-name
-
-# Add PostgreSQL and Redis
-heroku addons:create heroku-postgresql:hobby-dev
-heroku addons:create heroku-redis:hobby-dev
-
-# Set environment variables
-heroku config:set NODE_ENV=production
-heroku config:set JWT_SECRET=your_secret_key
-
-# Deploy
-git push heroku main
-
-# Run migrations
-heroku run npm run migration:run
-```
-
-### DigitalOcean App Platform
-
-1. Connect your GitHub repository
-2. Configure build and run commands:
-   - **Build Command**: `npm install && npm run build`
-   - **Run Command**: `npm start`
-3. Add environment variables in the dashboard
-4. Add PostgreSQL and Redis databases
-5. Deploy
+Returns **200 OK** when the service is alive.
 
 ---
 
 ## Database Migrations
 
-### Create a New Migration
+### Generate a Migration
 
 ```bash
-npm run migration:generate -- -n MigrationName
+npm run migration:generate
 ```
 
 ### Run Migrations
@@ -450,36 +196,81 @@ npm run migration:generate -- -n MigrationName
 npm run migration:run
 ```
 
-### Revert Last Migration
+### Revert Migration
 
 ```bash
 npm run migration:revert
 ```
+
+> **Note:** Migrations are not auto-run in production and should be executed as a controlled deployment step.
+
+---
+
+## Production Deployment
+
+### Docker (Production)
+
+```bash
+docker-compose up --build -d
+```
+
+**Production features:**
+- Multi-stage Docker builds
+- Non-root container user
+- Optimized image size
+- Health checks and restart policies
+
+### Railway Deployment (Recommended)
+
+- Dockerfile-based deployment
+- Managed PostgreSQL and Redis
+- CI via GitHub Actions
+- Secrets managed via GitHub Environments
+
+**Best practices:**
+- Node.js 18 runtime
+- Manual migration execution
+- Health-based deployments
+
+---
+
+## CI/CD
+
+- **Continuous Integration** via GitHub Actions
+- **Continuous Deployment** handled by Railway
+- Secrets stored securely using GitHub Environments
+- No secrets committed to the repository
 
 ---
 
 ## Testing
 
 ```bash
-# Run all tests
 npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
 ```
+
+**Includes:**
+- Authentication tests
+- Tenant isolation tests
+- Core API tests
+
+---
+
+## Security Considerations
+
+- JWT-based authentication
+- Role-based authorization
+- Tenant-level data isolation
+- No runtime schema synchronization
+- Non-root Docker containers
 
 ---
 
 ## Roadmap
 
-- [ ] GraphQL API support
-- [ ] WebSocket real-time features
-- [ ] Advanced caching strategies
-- [ ] Monitoring and observability (Prometheus, Grafana)
-- [ ] Rate limiting per tenant
-- [ ] API versioning
-- [ ] Automated backup strategies
-
+- [ ] Rate limiting using Redis
+- [ ] Subscription enforcement middleware
+- [ ] Background job processing
+- [ ] Observability (metrics and tracing)
+- [ ] Staging environment
+- [ ] WebSocket support
