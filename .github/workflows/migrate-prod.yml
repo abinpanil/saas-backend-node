@@ -1,0 +1,25 @@
+name: Run Production Migrations
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run migrations
+        run: railway run npm run migration:run
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
