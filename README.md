@@ -265,25 +265,43 @@ http://localhost:3000/api-docs
 
 ---
 
+
 ## Deployment
 
 ### Docker Deployment
 
-#### 1. Build Docker Image
+This project includes separate Docker configurations for development and production environments.
+
+#### Development Environment
+
+For local development with hot reload:
 
 ```bash
-# Build the image
-docker build -t saas-backend-node -f docker/Dockerfile .
+# Start all services (app, postgres, redis) in development mode
+cd docker
+docker-compose -f docker-compose.dev.yml up --build
 
-# Or use docker-compose
-docker-compose build
-```
+# Or run in detached mode
+docker-compose -f docker-compose.dev.yml up -d
 
-#### 2. Run with Docker Compose
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f app-dev
 
-```bash
-# Start all services (app, postgres, redis)
-docker-compose up -d
+# Stop services
+docker-compose -f docker-compose.dev.yml down
+
+# Stop and remove volumes (clean slate)
+docker-compose -f docker-compose.dev.yml down -v
+
+**Features:**
+- Hot reload with volume mounting
+- Development dependencies included
+
+# Navigate to docker directory
+cd docker
+
+# Build and start all services
+docker-compose up --build -d
 
 # View logs
 docker-compose logs -f app
@@ -292,9 +310,49 @@ docker-compose logs -f app
 docker-compose down
 ```
 
-#### 3. Environment Variables
+**3. Production Features**
 
-Update `docker-compose.yml` or create a `.env.production` file with production values.
+- Multi-stage build for optimized image size
+- Non-root user for security
+- Production dependencies only
+- Health checks for all services
+- Persistent volumes for data
+- Automatic restart policies
+
+#### Docker Commands Reference
+
+```bash
+# View running containers
+docker-compose ps
+
+# View logs for specific service
+docker-compose logs -f postgres
+docker-compose logs -f redis
+docker-compose logs -f app
+
+# Execute commands in container
+docker-compose exec app sh
+docker-compose exec postgres psql -U postgres -d saas_backend
+
+# Rebuild specific service
+docker-compose build app
+
+# Remove all containers and volumes
+docker-compose down -v
+
+# View resource usage
+docker stats
+```
+
+#### Environment Files
+
+The project uses different environment files for different contexts:
+
+- `.env.example` - Template with all available variables
+- `.env.development` - Development configuration (used by docker-compose.dev.yml)
+- `docker/.env.production` - Production configuration (used by docker-compose.yml)
+
+
 
 ### AWS Deployment
 
