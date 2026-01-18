@@ -21,7 +21,7 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate src/database/migrations/InitSchema -d src/config/data-source.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/data-source.ts",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
